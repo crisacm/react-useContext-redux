@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Get the session cookie
-  const session = request.cookies.get('session')?.value;
+  const session = request.cookies.get('token')?.value;
   const isPublicPath = request.nextUrl.pathname === '/login';
 
   // If user is not authenticated and trying to access protected routes (including root path)

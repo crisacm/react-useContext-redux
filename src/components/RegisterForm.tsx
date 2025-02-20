@@ -7,6 +7,7 @@ import { z } from "zod";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { mappedDocumentTypes, registerSchema } from "@/schemas/userSchema";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import { useAuth } from "@/context/AuthContext";
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -17,6 +18,7 @@ interface RegisterFormProps {
 export default function RegisterForm({ onBack }: RegisterFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordRepeat, setShowPasswordRepeat] = useState(false);
+  const { signUp } = useAuth();
 
   const {
     register,
@@ -39,9 +41,17 @@ export default function RegisterForm({ onBack }: RegisterFormProps) {
   const onSubmit = async (data: RegisterFormData) => {
     // Simulate API call
     console.log("Register form submitted:", data);
-    // Here you can add your actual API integration
-    alert("Registration successful!");
-    // onBack(); // Return to login form after successful registration
+    // If registration is successful, sign in automatically
+    await signUp(
+      data.firstName,
+      data.lastName,
+      data.phone,
+      data.documentType,
+      data.documentNumber,
+      data.email, 
+      data.password,
+      data.promotionalEmails ?? false
+    );
   };
 
   return (

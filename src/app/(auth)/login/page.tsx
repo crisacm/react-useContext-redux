@@ -3,10 +3,23 @@
 import { useState } from "react";
 import LoginForm from "@/components/LoginForm";
 import RegisterForm from "@/components/RegisterForm";
+import { useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
+
+  const { user, isLoading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      console.log("User is logged in");
+      router.push("/dashboard");
+    }
+  }, [user, router, isLoading]);
 
   return (
     <>
