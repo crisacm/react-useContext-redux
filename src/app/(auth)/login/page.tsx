@@ -4,14 +4,15 @@ import { useState } from "react";
 import LoginForm from "@/components/LoginForm";
 import RegisterForm from "@/components/RegisterForm";
 import { useEffect } from "react";
-import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { useAppSelector } from "@/store/hooks";
+import { selectAuth } from "@/store/slices/authSlice";
 
 export default function Login() {
   const [isLogin, setIsLogin] = useState(true);
   const [isRegistering, setIsRegistering] = useState(false);
 
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAppSelector(selectAuth);
   const router = useRouter();
 
   useEffect(() => {

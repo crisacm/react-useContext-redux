@@ -4,14 +4,15 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginCredentialsSchema } from "@/schemas/userSchema";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/context/AuthContext";
+import { useAppDispatch } from "@/store/hooks";
+import { signIn } from "@/store/slices/authSlice";
 
 interface LoginFormProps {
   onRegister: () => void;
 }
 
 export default function LoginForm({ onRegister }: LoginFormProps) {
-  const { signIn } = useAuth();
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -22,7 +23,7 @@ export default function LoginForm({ onRegister }: LoginFormProps) {
   });
 
   const onHandleSubmit = (data: z.infer<typeof loginCredentialsSchema>) => {
-    signIn(data.email, data.password);
+    dispatch(signIn({ email: data.email, password: data.password }));
   };
 
   return (

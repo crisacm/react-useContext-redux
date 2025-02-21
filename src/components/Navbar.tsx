@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAppDispatch } from "@/store/hooks";
+import { signOut } from "@/store/slices/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
-  const { signOut } = useAuth();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -56,7 +59,13 @@ export default function Navbar() {
                 role="menuitem"
                 onClick={() => {
                   toggleMenu();
-                  signOut();
+                  dispatch(
+                    signOut({
+                      onSignOut: () => {
+                        router.push("/login");
+                      },
+                    })
+                  );
                 }}
               >
                 <svg

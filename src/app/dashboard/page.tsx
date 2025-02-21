@@ -2,11 +2,12 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
+import { useAppSelector } from "@/store/hooks";
+import { selectAuth } from "@/store/slices/authSlice";
 import Navbar from "@/components/Navbar";
 
 export default function Dashboard() {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading } = useAppSelector(selectAuth);
   const router = useRouter();
 
   useEffect(() => {

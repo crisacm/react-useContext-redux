@@ -7,7 +7,8 @@ import { z } from "zod";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 import { mappedDocumentTypes, registerSchema } from "@/schemas/userSchema";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import { useAuth } from "@/context/AuthContext";
+import { useAppDispatch } from "@/store/hooks";
+import { signUp } from "@/store/slices/authSlice";
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -18,7 +19,7 @@ interface RegisterFormProps {
 export default function RegisterForm({ onBack }: RegisterFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordRepeat, setShowPasswordRepeat] = useState(false);
-  const { signUp } = useAuth();
+  const dispatch = useAppDispatch();
 
   const {
     register,
@@ -39,18 +40,17 @@ export default function RegisterForm({ onBack }: RegisterFormProps) {
   );
 
   const onSubmit = async (data: RegisterFormData) => {
-    // Simulate API call
-    console.log("Register form submitted:", data);
-    // If registration is successful, sign in automatically
-    await signUp(
-      data.firstName,
-      data.lastName,
-      data.phone,
-      data.documentType,
-      data.documentNumber,
-      data.email, 
-      data.password,
-      data.promotionalEmails ?? false
+    dispatch(
+      signUp({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        phoneNumber: data.phone,
+        documentType: data.documentType,
+        userDocument: data.documentNumber,
+        email: data.email,
+        password: data.password,
+        optionalEmailSubscription: data.promotionalEmails ?? false,
+      })
     );
   };
 
@@ -62,7 +62,9 @@ export default function RegisterForm({ onBack }: RegisterFormProps) {
         </h1>
 
         <p className="mt-4 text-gray-500">
-          Okay, tell me a little bit about yourself so I can let you continue. You don&apos;t have to be 100% honest with us, as long as you fill in the fields. At the end of the day, none of this is real anyway. ✨ 
+          Okay, tell me a little bit about yourself so I can let you continue.
+          You don&apos;t have to be 100% honest with us, as long as you fill in
+          the fields. At the end of the day, none of this is real anyway. ✨
         </p>
       </div>
 
